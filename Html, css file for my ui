@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Reality History Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            width: 60%;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #timer {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="start-screen">
+        <h1>WELCOME TO VIRTUAL REALITY HISTORY QUIZ</h1>
+        <p>Name: <input type="text" id="name"></p>
+        <p>Email: <input type="email" id="email"></p>
+        <p>Mobile No: <input type="tel" id="mobile"></p>
+        <button id="start-btn">Start Quiz</button>
+    </div>
+    <div class="container hidden" id="quiz-container">
+        <div id="timer">25:00</div>
+        <div id="question-container"></div>
+        <button id="next-btn" class="hidden">Next</button>
+    </div>
+    <div class="container hidden" id="end-screen">
+        <h1>THANK-YOU FOR ATTENDING THE QUIZ</h1>
+        <p>Your answers will be emailed within 24 hours.</p>
+    </div>
+    <script>
+        const questions = [
+            { q: 'Who is known as the "Father of VR"?', options: ['Jaron Lanier', 'Ivan Sutherland', 'Morton Heilig', 'Douglas Engelbart'], answer: 1 },
+            { q: 'Which military application advanced VR tech in the 1960s?', options: ['Tank simulation', 'Flight simulation', 'Submarine simulation', 'Drone control'], answer: 1 },
+            { q: 'What company released the VPL DataGlove in 1987?', options: ['VPL Research', 'Atari', 'Nintendo', 'Sega'], answer: 0 },
+            { q: 'Which 1984 movie featured a VR-like simulation?', options: ['Tron', 'Blade Runner', 'WarGames', 'Last Starfighter'], answer: 0 },
+            { q: 'Which gaming company introduced the Virtual Boy in 1995?', options: ['Sony', 'Sega', 'Nintendo', 'Google'], answer: 2 },
+            { q: 'Which company released the Oculus Rift prototype in 2012?', options: ['HTC', 'Oculus VR', 'Google', 'Valve'], answer: 1 },
+            { q: 'When was the first consumer Oculus Rift released?', options: ['2014', '2015', '2016', '2017'], answer: 2 },
+            { q: 'Which company developed "Beat Saber"?', options: ['TENCENT', 'Oculus Studios', 'Beat Games', 'Valve'], answer: 2 },
+            { q: 'What was a key VR advancement in the 2000s?', options: ['Motion-tracking', 'Eye-tracking', 'All of the above', 'High-definition displays'], answer: 2 },
+            { q: 'What does "HMD" stand for?', options: ['Head Motion Device', 'Head-Mounted Display', 'Haptic Motion Detector', 'High Mobility Display'], answer: 1 }
+        ];
+        let currentQuestionIndex = 0;
+        let timeLeft = 1500;
+        let timer;
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('quiz-container').classList.remove('hidden');
+            startTimer();
+            showQuestion();
+        });
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                document.getElementById('timer').textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+                if (timeLeft <= 0) endQuiz();
+            }, 1000);
+        }
+        function showQuestion() {
+            if (currentQuestionIndex >= questions.length) return endQuiz();
+            const q = questions[currentQuestionIndex];
+            document.getElementById('question-container').innerHTML = `<h2>${q.q}</h2>` +
+                q.options.map((opt, i) => `<button onclick="selectAnswer(${i})">${opt}</button>`).join('');
+        }
+        function selectAnswer(index) {
+            currentQuestionIndex++;
+            showQuestion();
+        }
+        function endQuiz() {
+            clearInterval(timer);
+            document.getElementById('quiz-container').classList.add('hidden');
+            document.getElementById('end-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
